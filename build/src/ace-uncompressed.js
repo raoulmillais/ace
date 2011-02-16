@@ -4799,6 +4799,9 @@ var Editor =function(renderer, session) {
         this.renderer.scrollToRow(row);
     };
 
+    this.scrollToLine = function(line, center) {
+        this.renderer.scrollToLine(line, center);
+    };
 
     this.getCursorPosition = function() {
         return this.selection.getCursor();
@@ -4836,7 +4839,7 @@ var Editor =function(renderer, session) {
         this.$blockScrolling -= 1;
 
         if (!this.isRowVisible(this.getCursorPosition().row)) {
-            this.scrollToRow(lineNumber - 1 - Math.floor(this.getVisibleRowCount() / 2));
+            this.scrollToLine(lineNumber, true);
         }
     },
 
@@ -6715,8 +6718,7 @@ canon.addCommand({
 canon.addCommand({
     name: "inserttext",
     exec: function(env, args, request) {
-        env.editor.insert(lang.stringRepeat(args.text  || "",
-                                            args.times || 1));
+        env.editor.insert(lang.stringRepeat(args.text  || "", args.times || 1));
     }
 });
 
@@ -10611,6 +10613,19 @@ var VirtualRenderer = function(container, theme) {
     this.scrollToRow = function(row) {
         this.scrollToY(row * this.lineHeight);
     };
+
+    this.scrollToLine = function(line, center) {
+	      var lineHeight = { lineHeight: this.lineHeight };
+	      var offset = 0;
+	      for (var l = 1; l < line; l++) {
+		        offset += this.session.getRowHeight(lineHeight, l-1);
+		    }
+		
+		    if (center) {
+			      offset -= this.$size.scrollerHeight / 2;
+			  }
+		    this.scrollToY(offset);
+	  };
 
     this.scrollToY = function(scrollTop) {
         var maxHeight = this.session.getScreenLength() * this.lineHeight - this.$size.scrollerHeight;

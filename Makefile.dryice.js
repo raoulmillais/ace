@@ -240,7 +240,7 @@ copy({
 
 [
     "clouds", "clouds_midnight", "cobalt", "dawn", "idle_fingers", "kr_theme", 
-    "mono_industrial", "monokai", "pastel_on_dark", "twilight"
+    "mono_industrial", "monokai", "pastel_on_dark", "twilight", "7digital"
 ].forEach(function(theme) {
     copy({
         source: [{
